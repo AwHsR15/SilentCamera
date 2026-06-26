@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- 静音图标：喇叭 + X -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M38,35 L30,35 L30,73 L38,73 L54,83 L54,25 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M62,42 L78,58 M78,42 L62,58"
+        android:strokeWidth="4"
+        android:strokeColor="#FFFFFF" />
+</vector>
