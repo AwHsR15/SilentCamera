@@ -28,3 +28,12 @@ local.properties
 # Isolated development checkouts
 .worktrees/
 .superpowers/
+
+# Python tools and external signing material
+__pycache__/
+*.py[cod]
+*.p12
+*.pem
+*.key
+.env
+.env.*
