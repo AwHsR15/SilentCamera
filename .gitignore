@@ -27,3 +27,4 @@ local.properties
 
 # Isolated development checkouts
 .worktrees/
+.superpowers/
