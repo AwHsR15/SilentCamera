@@ -24,3 +24,6 @@ local.properties
 # Keystore (never commit signing keys)
 *.jks
 *.keystore
+
+# Isolated development checkouts
+.worktrees/
