@@ -35,6 +35,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import com.marvis.silentcamera.R
 import com.marvis.silentcamera.camera.*
 import kotlinx.coroutines.Dispatchers
@@ -51,6 +53,16 @@ fun CameraScreen() {
     val main=remember(context){ContextCompat.getMainExecutor(context)}
     var permission by remember{mutableStateOf(ContextCompat.checkSelfPermission(context,Manifest.permission.CAMERA)==PackageManager.PERMISSION_GRANTED)}
     var storage by remember{mutableStateOf(Build.VERSION.SDK_INT>=29 || ContextCompat.checkSelfPermission(context,Manifest.permission.WRITE_EXTERNAL_STORAGE)==PackageManager.PERMISSION_GRANTED)}
+    DisposableEffect(lifecycle,context) {
+        val observer=LifecycleEventObserver{_,event ->
+            if(event==Lifecycle.Event.ON_RESUME) {
+                permission=ContextCompat.checkSelfPermission(context,Manifest.permission.CAMERA)==PackageManager.PERMISSION_GRANTED
+                storage=Build.VERSION.SDK_INT>=29 || ContextCompat.checkSelfPermission(context,Manifest.permission.WRITE_EXTERNAL_STORAGE)==PackageManager.PERMISSION_GRANTED
+            }
+        }
+        lifecycle.lifecycle.addObserver(observer)
+        onDispose{lifecycle.lifecycle.removeObserver(observer)}
+    }
     val askCamera=rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()){permission=it}
     val askStorage=rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()){storage=it}
     var front by rememberSaveable{mutableStateOf(false)}

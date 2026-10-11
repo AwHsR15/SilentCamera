@@ -27,4 +27,8 @@ Verify downloaded files in the `release/` directory with `sha256sum -c SHA256SUM
 
 ## Runtime verification
 
-Runtime checks are being recorded before the final artifact commit. Japanese OEM phones, root/resetprop modification and Magisk installation remain unverified in this environment. See [COMPATIBILITY.md](COMPATIBILITY.md) for the capability rules and test coverage.
+Android 15 / API 35 Google APIs x86_64 emulator checks confirmed preview APK installation, MainActivity startup, the no-Shizuku device/mode screen, and the camera-permission-required screen. Direct ADB checks confirmed the camera package PLAY_AUDIO transitions to ignore and restores to default; Android 15 output differences led to regression tests. These are configuration checks, not acoustic tests.
+
+The environment has no hardware acceleration. Software emulation encountered launcher/System UI ANRs and repeated Bluetooth-service crashes; remaining permission-dialog, language/theme interaction, camera capture/save and Shizuku service runtime checks could not be completed reliably. They remain unverified rather than being reported as passing. Locale resources have matching 113-key sets; CameraX/YUV, policy and transaction behavior is covered by unit tests and compile/lint checks.
+
+The local preview certificate SHA-256 is `2e4d513d5f1336154929431ce2372b4fa300209349e88c86550a7b985aa10916` (RSA 2048, APK Signature Scheme v2 verified). Japanese OEM phones, root/resetprop modification and Magisk installation remain unverified in this environment. See [COMPATIBILITY.md](COMPATIBILITY.md) for the capability rules and test coverage.

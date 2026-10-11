@@ -11,7 +11,7 @@ import com.marvis.silentcamera.shell.ShizukuExecutor
 import org.json.JSONArray
 
 data class CameraApp(val packageName:String,val label:String,val version:String)
-enum class Requirement { READY, SHIZUKU, SAMSUNG_ONLY, AUDIO_POLICY, EXPERIMENTAL_AUDIO, ROOT, ROOT_READY, MODULE, CAMERA_PERMISSION }
+enum class Requirement { READY, SHIZUKU, SAMSUNG_ONLY, SETTING_UNREADABLE, AUDIO_POLICY, EXPERIMENTAL_AUDIO, ROOT, ROOT_READY, MODULE, CAMERA_PERMISSION }
 data class ModeAssessment(val mode:SilenceMode,val availability:Availability,val requirement:Requirement)
 data class DeviceReport(
     val manufacturer:String,val model:String,val androidVersion:String,val sdk:Int,
@@ -63,7 +63,7 @@ class ModeRepository(private val context:Context) {
         val assessments=SilenceMode.entries.map{mode ->when(mode) {
             SilenceMode.CSC -> if(!ModePolicy.supportsCsc(Build.MANUFACTURER)) ModeAssessment(mode,Availability.UNSUPPORTED,Requirement.SAMSUNG_ONLY)
                 else if(!granted) ModeAssessment(mode,Availability.NEEDS_PERMISSION,Requirement.SHIZUKU)
-                else if(!cscReadable)ModeAssessment(mode,Availability.UNSUPPORTED,Requirement.SAMSUNG_ONLY)
+                else if(!cscReadable)ModeAssessment(mode,Availability.UNSUPPORTED,Requirement.SETTING_UNREADABLE)
                 else ModeAssessment(mode,Availability.AVAILABLE,Requirement.READY)
             SilenceMode.AUDIO_GROUP -> if(!granted) ModeAssessment(mode,Availability.NEEDS_PERMISSION,Requirement.SHIZUKU)
                 else if(group==null) ModeAssessment(mode,Availability.UNSUPPORTED,Requirement.AUDIO_POLICY)
@@ -83,7 +83,7 @@ class ModeRepository(private val context:Context) {
 
     private fun readAudioGroup():AudioGroup {
         val help=reportExecutor.execute(listOf("cmd","audio","help")).requireOutput()
-        check(help.contains("set-group-volume") && help.contains("adj-group-volume")){"Volume group CLI unsupported"}
+        check(help.contains("adj-group-volume")){"Volume group CLI unsupported"}
         val mappings=JSONArray(shell.audioGroups())
         val candidates=(0 until mappings.length()).map{mappings.getJSONObject(it)}.filter {
             it.optString("name")=="AUDIO_STREAM_ENFORCED_AUDIBLE" && it.optJSONArray("streams")?.let { s ->s.length()==1 && s.optInt(0)==7 }==true
@@ -91,6 +91,7 @@ class ModeRepository(private val context:Context) {
         check(candidates.size==1){"No isolated enforced-audible group mapping"}
         val id=candidates.single().getInt("id");check(id>=0)
         val dump=reportExecutor.execute(listOf("dumpsys","audio")).requireOutput()
+        check(ModePolicy.isolatedEnforcedStream(dump)){"Enforced stream is aliased, shared or its isolation is unproven"}
         val header="- VOLUME GROUP AUDIO_STREAM_ENFORCED_AUDIBLE:"
         check(dump.split(header).size==2){"Audio group state is ambiguous"}
         val injected=dump.replace(header,"$header\n   Id: $id")

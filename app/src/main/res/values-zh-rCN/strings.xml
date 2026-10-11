@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="req_setting_unreadable">无法读取设置，已禁用修改</string>
     <string name="app_name">SilentCamera</string>
     <string name="tagline">为安静拍摄，找到合适的方式</string>
     <string name="tab_modes">模式</string>

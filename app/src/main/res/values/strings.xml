@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="req_setting_unreadable">Could not read this setting; modification is disabled</string>
     <string name="app_name">SilentCamera</string>
     <string name="tagline">Find your way to a quieter camera</string>
     <string name="tab_modes">Modes</string>

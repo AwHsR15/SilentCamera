@@ -12,7 +12,7 @@ The APK supports Android 8.0/API 26 and later, without a Samsung-only installati
 | Kyocera | Capability detection; app/root/module or alternate camera | Unverified |
 | Other Android 8.0+ devices | Detected supported modes or in-app camera | Unverified |
 
-CSC is available only on Samsung with an authorized, readable settings backend. An originally absent value is preserved as absence on restoration. Audio-group mode needs a unique platform mapping with only legacy enforced-audible stream 7, supported group CLI, zero minimum, and equal volumes across all saved routes. It dynamically resolves the group ID; it does not assume group 7. Missing, shared, ambiguous or differing-route groups disable modification. A route change also prevents unsafe restoration.
+CSC is available only on Samsung with an authorized, readable settings backend. An originally absent value is preserved as absence on restoration. Audio-group mode needs a unique platform mapping with only legacy enforced-audible stream 7, supported group CLI, proven independent stream aliases, zero minimum, and equal volumes across all saved routes. It changes mute state only and preserves volume indices; group-volume writes are deliberately unavailable because Android changes only the active route. It dynamically resolves the group ID; it does not assume group 7. Missing, shared, ambiguous or differing-route groups disable modification. A route change also prevents unsafe restoration.
 
 AppOps PLAY_AUDIO is experimental: it may silence other audio in the selected camera, and AOSP forced-camera sounds may ignore the restriction. Root mode requires both root and resetprop; only existing known properties with recognized values are changed. Services may cache properties, and a reboot can reset them. Magisk only affects discovered allowlisted external sound files.
 
@@ -21,7 +21,7 @@ Settings backups are scoped to Android user and firmware identity, kept locally,
 ## Verified in this workspace
 
 - Original 1.0 APK build completed as a baseline.
-- 29 JVM behavior tests: state transactions, failed reads, absent originals, retained backups, rollback, user/firmware mismatch, audio parsing, allowlisted commands, bounded dual-stream process handling, targets, YUV strides and orientation.
+- 33 JVM behavior tests: state transactions, failed reads, absent originals, retained backups, rollback, user/firmware mismatch, audio parsing, allowlisted commands, bounded dual-stream process handling, stream alias isolation, route-preserving muting, Android 15 and UID-level AppOps responses, targets, YUV strides and orientation.
 - 7 Python behavior tests: CSC backup/restoration failure cases, missing originals, device/user mismatch, module path allowlist, archive exclusions and deterministic ZIP/hash behavior.
 - Android unit tests, APK assembly and lint completed; lint has no errors. Capability-gated private audio API and dependency/update recommendations remain warnings.
 - Module shell syntax and PC shell syntax pass; ffprobe recognizes the silent asset as mono 44.1kHz Vorbis, 0.200 seconds. Android APK signatures and all distribution checksums are checked before delivery.

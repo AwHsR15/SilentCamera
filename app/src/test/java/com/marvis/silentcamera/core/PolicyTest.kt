@@ -4,6 +4,15 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class PolicyTest {
+    @Test fun enforcedStreamMustBeUnaliasedAndUnshared() {
+        val isolated="Stream volumes (device: index)\n- STREAM_VOICE_CALL:\n- STREAM_ALARM:\n- STREAM_NOTIFICATION (aliased to: STREAM_RING):\n- STREAM_RING:\n- STREAM_SYSTEM_ENFORCED:\n- STREAM_MUSIC:"
+        assertTrue(ModePolicy.isolatedEnforcedStream(isolated))
+        assertFalse(ModePolicy.isolatedEnforcedStream(isolated.replace("- STREAM_SYSTEM_ENFORCED:","- STREAM_SYSTEM_ENFORCED (aliased to: STREAM_RING):")))
+        assertFalse(ModePolicy.isolatedEnforcedStream(isolated.replace("- STREAM_MUSIC:","- STREAM_MUSIC (aliased to: STREAM_SYSTEM_ENFORCED):")))
+        assertTrue(ModePolicy.isolatedEnforcedStream(isolated.replace("- STREAM_SYSTEM_ENFORCED:","- STREAM_SYSTEM_ENFORCED (aliased to: STREAM_SYSTEM_ENFORCED):")))
+        assertFalse(ModePolicy.isolatedEnforcedStream(isolated.replace("- STREAM_RING:","")))
+        assertFalse(ModePolicy.isolatedEnforcedStream("- STREAM_SYSTEM_ENFORCED:"))
+    }
     @Test fun failedCscReadIsNeverAnAbsentSetting() {
         try { ModePolicy.cscValue(CommandResult(1, "", "Permission denied")); fail("Expected read failure") }
         catch (e: IllegalStateException) { assertTrue(e.message!!.contains("Permission denied")) }

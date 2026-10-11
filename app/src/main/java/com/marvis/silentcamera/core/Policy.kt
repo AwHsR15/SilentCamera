@@ -1,6 +1,18 @@
 package com.marvis.silentcamera.core
 
 object ModePolicy {
+    fun isolatedEnforcedStream(dump:String):Boolean {
+        if(!dump.contains("Stream volumes (device: index)"))return false
+        val headers=Regex("(?m)^\\s*- (STREAM_[A-Z_]+)(?: \\(aliased to: (STREAM_[A-Z_]+)\\))?:\\s*$").findAll(dump).toList()
+        val names=headers.map{it.groupValues[1]}
+        if(names.distinct().size!=names.size)return false
+        if(!names.containsAll(listOf("STREAM_VOICE_CALL","STREAM_RING","STREAM_MUSIC","STREAM_ALARM","STREAM_NOTIFICATION","STREAM_SYSTEM_ENFORCED")))return false
+        // AOSP omits the alias suffix when a stream maps to itself.
+        fun alias(m:MatchResult)=m.groupValues[2].ifEmpty{m.groupValues[1]}
+        val target="STREAM_SYSTEM_ENFORCED"
+        val enforced=headers.singleOrNull{it.groupValues[1]==target} ?: return false
+        return alias(enforced)==target && headers.none{it.groupValues[1]!=target && alias(it)==target}
+    }
     fun validPackage(value: String): Boolean =
         Regex("[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z][A-Za-z0-9_]*)+").matches(value)
 

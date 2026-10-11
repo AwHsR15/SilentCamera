@@ -26,6 +26,14 @@ class TargetsTest {
         val t=AppAudioTarget(Executor(CommandResult(0,"unexpected output")),0,"com.example.camera")
         try {t.read();fail()}catch(_:IllegalStateException){}
     }
+    @Test fun absentAppOpMayIncludeItsPlatformDefaultWithoutCreatingAnOriginalOverride() {
+        val t=AppAudioTarget(Executor(CommandResult(0,"No operations.\nDefault mode: allow")),0,"com.example.camera")
+        assertEquals("default",t.read())
+    }
+    @Test fun uidLevelAppOpCannotBeSavedAsAPackageOriginal() {
+        val t=AppAudioTarget(Executor(CommandResult(0,"Uid mode: PLAY_AUDIO: ignore\nNo operations.\nDefault mode: allow")),0,"com.example.camera")
+        try{t.read();fail()}catch(_:IllegalStateException){}
+    }
     @Test fun rootRestoreUsesOnlyExactSupportedProperties() {
         val ex=Executor();val t=PropertyTarget(ex,listOf("ro.camera.sound.forced"))
         assertEquals("ro.camera.sound.forced=1",t.read());t.write("ro.camera.sound.forced=0")
@@ -39,5 +47,20 @@ class TargetsTest {
         assertEquals(listOf("cmd","audio","adj-group-volume","19","MUTE"),ex.commands.last())
         val other=AudioGroupTarget(ex){group.copy(id=20)}
         try {other.write(t.read());fail()}catch(_:IllegalStateException){}
+    }
+    @Test fun mutingMultipleRoutesPreservesEveryVolumeAndCanRestore() {
+        var group=AudioGroup(19,false,mapOf(2 to 4,0x40000000 to 4))
+        val commands=mutableListOf<List<String>>()
+        val ex=CommandExecutor { args ->
+            commands.add(args)
+            if(args[2]=="set-group-volume")group=group.copy(volumes=group.volumes + (2 to args[4].toInt()))
+            if(args[2]=="adj-group-volume")group=group.copy(muted=args[4]=="MUTE")
+            CommandResult(0)
+        }
+        val t=AudioGroupTarget(ex){group};val original=t.read()
+        val desired=t.mutedState(group);t.write(desired)
+        assertEquals(desired,t.read());assertEquals(mapOf(2 to 4,0x40000000 to 4),group.volumes)
+        t.write(original);assertEquals(original,t.read())
+        assertTrue(commands.none{it[2]=="set-group-volume"})
     }
 }

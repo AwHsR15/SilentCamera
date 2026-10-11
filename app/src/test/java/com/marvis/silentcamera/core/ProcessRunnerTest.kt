@@ -19,6 +19,7 @@ class ProcessRunnerTest {
     }
     @Test fun shellAndArbitrarySettingsAreNotExposedByTheService() {
         assertTrue(CommandPolicy.allowed(listOf("resetprop","--help")))
+        assertFalse(CommandPolicy.allowed(listOf("cmd","audio","set-group-volume","2","0")))
         assertTrue(CommandPolicy.allowed(listOf("settings","--user","10","get","system","csc_pref_camera_forced_shuttersound_key")))
         assertTrue(CommandPolicy.allowed(listOf("cmd","appops","set","--user","0","com.google.android.GoogleCamera","PLAY_AUDIO","ignore")))
         for(args in listOf(listOf("sh","-c","id"),listOf("settings","put","secure","unknown","0"),listOf("getprop","ro.serialno"),listOf("cmd","audio","set-group-volume","2;id","0"))) assertFalse(CommandPolicy.allowed(args))

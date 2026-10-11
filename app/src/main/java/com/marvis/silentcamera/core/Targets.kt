@@ -13,8 +13,9 @@ class AppAudioTarget(private val executor: CommandExecutor, private val user:Int
     init { require(ModePolicy.validPackage(pkg)) }
     override fun read():String {
         val output=executor.execute(listOf("cmd","appops","get","--user",user.toString(),pkg,"PLAY_AUDIO")).requireOutput()
-        if(output.trim()=="No operations.")return "default"
-        val modes=Regex("PLAY_AUDIO:\\s*(?:mode=)?(default|allow|ignore|deny|foreground)\\b").findAll(output).map{it.groupValues[1]}.toList()
+        check(!Regex("(?im)^\\s*Uid mode:").containsMatchIn(output)){"UID-level audio policy is unsupported; no package original can be inferred"}
+        if(Regex("No operations\\.(?:\\s+Default mode: (?:default|allow|ignore|deny|foreground))?").matches(output.trim()))return "default"
+        val modes=Regex("(?m)^\\s*PLAY_AUDIO:\\s*(?:mode=)?(default|allow|ignore|deny|foreground)\\b").findAll(output).map{it.groupValues[1]}.toList()
         check(modes.size==1){"Unrecognized or ambiguous PLAY_AUDIO response"}
         return modes.single()
     }
@@ -56,9 +57,9 @@ class AudioGroupTarget(private val executor:CommandExecutor, private val readGro
         val current=readGroup()
         check(current.id==id && entries.map{it.first}.toSet()==current.volumes.keys && entries.distinctBy{it.first}.size==entries.size){"Audio group or output routes changed"}
         check(entries.map{it.second}.distinct().size==1){"Cannot restore differing route volumes"}
-        executor.execute(listOf("cmd","audio","set-group-volume",id.toString(),entries.first().second.toString())).requireOutput()
+        check(entries.toMap()==current.volumes){"Route volumes changed; refusing to overwrite them"}
         executor.execute(listOf("cmd","audio","adj-group-volume",id.toString(),if(muted)"MUTE" else "UNMUTE")).requireOutput()
     }
-    fun mutedState(group:AudioGroup):String = encode(group.copy(muted=true,volumes=group.volumes.mapValues{0}))
+    fun mutedState(group:AudioGroup):String = encode(group.copy(muted=true))
     private fun encode(group:AudioGroup):String = "${group.id}|${group.muted}|${group.volumes.toSortedMap().entries.joinToString(","){"${it.key}=${it.value}"}}"
 }

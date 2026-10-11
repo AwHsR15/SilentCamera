@@ -72,8 +72,7 @@ object CommandPolicy {
             return (args.size == 7 && args[2] == "get") || (args.size == 8 && args[2] == "set" && args[7] in setOf("default", "allow", "ignore", "deny", "foreground"))
         }
         if (args.size == 5 && args.take(2) == listOf("cmd", "audio") && number(args[3])) {
-            return (args[2] == "set-group-volume" && number(args[4])) ||
-                (args[2] == "adj-group-volume" && args[4] in setOf("MUTE", "UNMUTE"))
+            return args[2] == "adj-group-volume" && args[4] in setOf("MUTE", "UNMUTE")
         }
         return false
     }

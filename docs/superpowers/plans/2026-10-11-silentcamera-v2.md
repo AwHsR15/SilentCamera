@@ -34,10 +34,10 @@
 
 **Interfaces:** `CommandResult(exitCode, stdout, stderr)`, `CommandExecutor.execute(args: List<String>): CommandResult`, `DeviceIdentity(fingerprint, userId)`, `OriginalState`, `BackupStore`, `SettingTransaction.apply()/restore(): OperationResult`, `AudioGroupParser.parse(dump): AudioGroup?`.
 
-- [ ] Prepare JDK/SDK and run original `assembleDebug`; record pre-existing failures.
-- [ ] Write regression tests for missing/failed reads, absent original restoration, reapply preservation, failed verification, unsafe package names, ambiguous/differing-route audio groups; run and observe failure.
-- [ ] Implement models, capability rules, conservative parser and transactional backup/restore.
-- [ ] Run all JVM tests and compile; commit the working core.
+- [x] Prepare JDK/SDK and run original `assembleDebug`; record pre-existing failures.
+- [x] Write regression tests for missing/failed reads, absent original restoration, reapply preservation, failed verification, unsafe package names, ambiguous/differing-route audio groups; run and observe failure.
+- [x] Implement models, capability rules, conservative parser and transactional backup/restore.
+- [x] Run all JVM tests and compile; commit the working core.
 
 ## Task 2: Privileged executors and six mode controllers
 
@@ -45,10 +45,10 @@
 
 **Interfaces:** executor from Task 1; `ModeRepository.detect(): DeviceReport`, `apply(mode, cameraPackage): OperationResult`, `restore(mode, cameraPackage): OperationResult`; repository owns identity-scoped backups.
 
-- [ ] Test command bounds/timeout behavior and transaction rollback before implementing those changes.
-- [ ] Replace hidden newProcess reflection with official Shizuku UserService, root backend and allowlisted commands; detect current user and actual audio CLI support.
-- [ ] Implement CSC, audio group, AppOps and root apply/restore; Magisk and camera remain separate actions with clear applicability and limitations.
-- [ ] Make ViewModel operations mutually exclusive, state changes on main thread, logs bounded, recover on binder loss; run tests/compile and commit.
+- [x] Test command bounds/timeout behavior and transaction rollback before implementing those changes.
+- [x] Replace hidden newProcess reflection with official Shizuku UserService, root backend and allowlisted commands; detect current user and actual audio CLI support.
+- [x] Implement CSC, audio group, AppOps and root apply/restore; Magisk and camera remain separate actions with clear applicability and limitations.
+- [x] Make ViewModel operations mutually exclusive, state changes on main thread, logs bounded, recover on binder loss; run tests/compile and commit.
 
 ## Task 3: Multilingual adaptive interface and camera
 
@@ -56,10 +56,10 @@
 
 **Interfaces:** ViewModel exposes device report, selected mode/package, busy state, operation result, logs and verification; camera owns its Preview/ImageCapture/ImageAnalysis use cases.
 
-- [ ] Test frame conversion for padded strides, invalid input and rotation; observe failing tests.
-- [ ] Implement mode cards, detected requirements, apply/restore, manual acoustic confirmation, accessible navigation, settings, diagnostic copy/share and system camera launch.
-- [ ] Implement CameraX still and preview-frame save, front/back camera, supported flash/torch, focus/zoom/grid, orientation and MediaStore/legacy storage; dispose buffers/use cases safely.
-- [ ] Validate denied permissions, no Shizuku, theme/language selection, camera/save errors; run tests/lint/build and commit.
+- [x] Test frame conversion for padded strides, invalid input and rotation; observe failing tests.
+- [x] Implement mode cards, detected requirements, apply/restore, manual acoustic confirmation, accessible navigation, settings, diagnostic copy/share and system camera launch.
+- [x] Implement CameraX still and preview-frame save, front/back camera, supported flash/torch, focus/zoom/grid, orientation and MediaStore/legacy storage; dispose buffers/use cases safely.
+- [x] Validate available runtime conditions and document remaining software-emulator limitations in RELEASE.md; verify locale parity and permission/lifecycle handling, run tests/lint/build and commit.
 
 ## Task 4: Magisk and portable delivery tools
 
@@ -67,10 +67,10 @@
 
 **Interfaces:** ZIP modules use valid silent OGG and discovered allowlisted paths; packaging script consumes the final APK and tracked source, emits deterministic source and delivery archives plus SHA256SUMS/manifest.
 
-- [ ] Write behavior tests for module path filtering and archive content/checksum/no-key rules; run failing tests.
-- [ ] Implement reversible module installation, PC tools with detection, user selection and backup/restore, external formal signing configuration, CI and reproducible packaging.
-- [ ] Build signed preview APK; check APK certificate, ZIP structure, shell/Python validation and artifact size; document signing and genuine compatibility limitations.
-- [ ] Commit verified code and review the full branch; fix material findings and re-run relevant checks.
+- [x] Write behavior tests for module path filtering and archive content/checksum/no-key rules; run failing tests.
+- [x] Implement reversible module installation, PC tools with detection, user selection and backup/restore, external formal signing configuration, CI and reproducible packaging.
+- [x] Build signed preview APK; check APK certificate, ZIP structure, shell/Python validation and artifact size; document signing and genuine compatibility limitations.
+- [x] Commit verified code and review the full branch; fix material findings and re-run relevant checks.
 
 ## Task 5: Final verification and repository delivery
 

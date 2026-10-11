@@ -25,6 +25,7 @@ fun modeDescription(mode:SilenceMode)=when(mode){
 fun requirementText(requirement:Requirement)=when(requirement){
     Requirement.READY->R.string.req_ready;Requirement.SHIZUKU->R.string.req_shizuku
     Requirement.SAMSUNG_ONLY->R.string.req_samsung;Requirement.AUDIO_POLICY->R.string.req_audio
+    Requirement.SETTING_UNREADABLE->R.string.req_setting_unreadable
     Requirement.EXPERIMENTAL_AUDIO->R.string.req_app;Requirement.ROOT->R.string.req_root
     Requirement.ROOT_READY->R.string.req_root_ready;Requirement.MODULE->R.string.req_module
     Requirement.CAMERA_PERMISSION->R.string.req_camera

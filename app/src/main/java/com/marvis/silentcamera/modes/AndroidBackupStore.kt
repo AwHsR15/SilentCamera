@@ -10,6 +10,7 @@ class AndroidBackupStore(context:Context):BackupStore {
     override fun get(key:String):OriginalState? {
         val raw=prefs.getString(key,null) ?: return null
         val json=JSONObject(raw)
+        check(json.has("value")){"Invalid original backup: missing value"}
         return OriginalState(DeviceIdentity(json.getString("fingerprint"),json.getInt("user")),
             if(json.isNull("value"))null else json.getString("value"))
     }

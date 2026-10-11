@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="req_setting_unreadable">設定を読み取れないため、変更は無効です</string>
     <string name="app_name">SilentCamera</string>
     <string name="tagline">静かな撮影に、適した方法を</string>
     <string name="tab_modes">モード</string>
