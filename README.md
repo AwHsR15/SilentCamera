@@ -1,4 +1,6 @@
-# SilentCamera 2.0
+# SilentCamera 2.1
+
+新版界面使用 Google 官方 [Material 3](https://developer.android.com/develop/ui/compose/designsystems/material3)（Compose BOM 2024.12.01），统一黑白与绿色配色、双列模式卡片、底部操作面板与圆形快门。支持浅色、深色、中文、日文和英文。
 
 **简体中文** · [日本語](README.ja.md) · [English](README.en.md)
 
@@ -8,10 +10,10 @@
 
 ## 下载
 
-- [新版安装包：SilentCamera-v2.0-preview.apk](release/SilentCamera-v2.0-preview.apk)
-- [完整封装：APK、Magisk、电脑工具、说明](release/SilentCamera-v2.0-bundle.zip)
-- [独立 Magisk 模块](release/SilentCamera-v2.0-magisk.zip)
-- [源码封装](release/SilentCamera-v2.0-source.zip)
+- [新版安装包：SilentCamera-v2.1-preview.apk](release/SilentCamera-v2.1-preview.apk)
+- [完整封装：APK、Magisk、电脑工具、说明](release/SilentCamera-v2.1-bundle.zip)
+- [独立 Magisk 模块](release/SilentCamera-v2.1-magisk.zip)
+- [源码封装](release/SilentCamera-v2.1-source.zip)
 - [SHA-256 校验](release/SHA256SUMS) · [产物与源提交清单](release/manifest.json)
 
 预览包已签名，包名为 `com.marvis.silentcamera.preview`，可与旧版并行安装。它使用预览签名，不能直接覆盖旧版；正式签名需从外部提供私钥。保留 [1.0 安装包](release/SilentCamera-v1.0-debug.apk) 供回退。
@@ -51,7 +53,7 @@ python3 tools/adb_control.py apply-csc --backup phone-original.json
 python3 tools/adb_control.py restore-csc --backup phone-original.json
 ```
 
-Windows 使用 `tools\adb-control.bat`，Linux／macOS 使用 `tools/adb-control.sh`，参数相同。多设备用 `--serial`；默认操作前台 Android 用户，可用 `--user` 指定用户。在源码仓库安装时加 `--apk release/SilentCamera-v2.0-preview.apk`。
+Windows 使用 `tools\adb-control.bat`，Linux／macOS 使用 `tools/adb-control.sh`，参数相同。多设备用 `--serial`；默认操作前台 Android 用户，可用 `--user` 指定用户。在源码仓库安装时加 `--apk release/SilentCamera-v2.1-preview.apk`。
 
 需要 JDK 17、Android SDK 35 和 Python 3.10+。完整封装仅能从已提交的 Git 源码构建：
 

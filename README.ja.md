@@ -1,4 +1,4 @@
-# SilentCamera 2.0
+# SilentCamera 2.1
 
 [简体中文](README.md) · **日本語** · [English](README.en.md)
 
@@ -8,10 +8,10 @@
 
 ## ダウンロード
 
-- [署名済みプレビュー APK](release/SilentCamera-v2.0-preview.apk)
-- [全部入り ZIP：APK、Magisk、PC ツール、説明](release/SilentCamera-v2.0-bundle.zip)
-- [Magisk モジュール](release/SilentCamera-v2.0-magisk.zip)
-- [ソース ZIP](release/SilentCamera-v2.0-source.zip)
+- [署名済みプレビュー APK](release/SilentCamera-v2.1-preview.apk)
+- [全部入り ZIP：APK、Magisk、PC ツール、説明](release/SilentCamera-v2.1-bundle.zip)
+- [Magisk モジュール](release/SilentCamera-v2.1-magisk.zip)
+- [ソース ZIP](release/SilentCamera-v2.1-source.zip)
 - [SHA256SUMS](release/SHA256SUMS) · [ソース／成果物の記録](release/manifest.json)
 
 プレビュー版のパッケージ名は `com.marvis.silentcamera.preview` です。旧版と共存できます。署名が異なるため旧版へ上書きできません。正式署名の秘密鍵は外部から設定します。[v1 APK](release/SilentCamera-v1.0-debug.apk) も残しています。
@@ -50,7 +50,7 @@ python3 tools/adb_control.py apply-csc --backup phone-original.json
 python3 tools/adb_control.py restore-csc --backup phone-original.json
 ```
 
-Linux／macOS は `tools/adb-control.sh`、Windows は `tools\adb-control.bat`。複数端末は `--serial`、ユーザー指定は `--user` を使います。リポジトリ内からのインストールは `--apk release/SilentCamera-v2.0-preview.apk` を追加します。
+Linux／macOS は `tools/adb-control.sh`、Windows は `tools\adb-control.bat`。複数端末は `--serial`、ユーザー指定は `--user` を使います。リポジトリ内からのインストールは `--apk release/SilentCamera-v2.1-preview.apk` を追加します。
 
 JDK 17、SDK 35、Python 3.10以降でビルドします。
 

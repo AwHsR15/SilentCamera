@@ -14,6 +14,17 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.draw.clip
+import com.marvis.silentcamera.SilentCameraTheme
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -135,15 +146,20 @@ fun CameraScreen() {
         onDispose{disposed=true;rotationListener?.disable();analysis?.clearAnalyzer();provider?.unbindAll();camera=null;capture=null;latest.set(null)}
     }
 
-    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal=20.dp,vertical=12.dp),verticalArrangement=Arrangement.spacedBy(12.dp)) {
-        Text(stringResource(R.string.mode_camera),style=MaterialTheme.typography.headlineSmall)
+    val shutterLabel=stringResource(if(saving)R.string.busy else if(frameMode)R.string.capture_frame else R.string.capture_photo)
+    val canCapture=storage && capture!=null && !saving
+    SilentCameraTheme("dark") {
+    Column(Modifier.fillMaxSize().background(Color(0xFF101412)).verticalScroll(rememberScrollState()).padding(horizontal=24.dp,vertical=12.dp),verticalArrangement=Arrangement.spacedBy(12.dp),horizontalAlignment=Alignment.CenterHorizontally) {
         if(!permission) {
-            Text(stringResource(R.string.camera_permission))
+            Spacer(Modifier.height(64.dp))
+            Surface(Modifier.size(96.dp),shape=CircleShape,color=MaterialTheme.colorScheme.surface){Box(contentAlignment=Alignment.Center){Icon(Icons.Default.CameraAlt,null,Modifier.size(40.dp),tint=MaterialTheme.colorScheme.primary)}}
+            Text(stringResource(R.string.camera_permission_title),style=MaterialTheme.typography.headlineSmall)
+            Text(stringResource(R.string.camera_permission_hint),style=MaterialTheme.typography.bodyMedium,color=MaterialTheme.colorScheme.onSurfaceVariant)
             Button(onClick={askCamera.launch(Manifest.permission.CAMERA)}){Text(stringResource(R.string.allow_camera))}
             Text(stringResource(R.string.permission_retry),style=MaterialTheme.typography.bodySmall)
             TextButton(onClick={safeOpen(context,Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,Uri.parse("package:${context.packageName}")))}){Text(stringResource(R.string.app_settings))}
         } else {
-            Box(Modifier.fillMaxWidth().height(380.dp).background(Color.Black)) {
+            Box(Modifier.fillMaxWidth().heightIn(max=360.dp).aspectRatio(3f/4f).clip(RoundedCornerShape(24.dp)).background(Color.Black)) {
                 AndroidView(factory={preview},modifier=Modifier.fillMaxSize())
                 Canvas(Modifier.fillMaxSize().pointerInput(camera){detectTapGestures{offset ->
                     camera?.cameraControl?.startFocusAndMetering(FocusMeteringAction.Builder(preview.meteringPointFactory.createPoint(offset.x,offset.y)).build())
@@ -155,13 +171,11 @@ fun CameraScreen() {
                 }
             }
             Row(horizontalArrangement=Arrangement.spacedBy(8.dp)) {
-                FilterChip(frameMode.not(),onClick={frameMode=false},enabled=!saving,label={Text(stringResource(R.string.full_quality))})
-                FilterChip(frameMode,onClick={frameMode=true},enabled=!saving,label={Text(stringResource(R.string.preview_frame))})
+                FilterChip(frameMode.not(),onClick={frameMode=false},enabled=!saving,label={Text(stringResource(R.string.photo_short))})
+                FilterChip(frameMode,onClick={frameMode=true},enabled=!saving,label={Text(stringResource(R.string.frame_short))})
             }
-            Text(stringResource(if(frameMode)R.string.frame_note else R.string.photo_note),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
             if(frameMode && frameSize.isNotBlank())Text(frameSize,style=MaterialTheme.typography.bodySmall)
             Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceBetween) {
-                IconButton(onClick={front=!front},enabled=otherLens && !saving){Icon(Icons.Default.Cameraswitch,stringResource(R.string.flip_camera))}
                 IconButton(onClick={grid=!grid}){Icon(Icons.Default.GridOn,stringResource(R.string.grid),tint=if(grid)MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant)}
                 if(camera?.cameraInfo?.hasFlashUnit()==true) {
                     IconButton(onClick={torch=!torch;camera?.cameraControl?.enableTorch(torch)}){Icon(if(torch)Icons.Default.FlashlightOn else Icons.Default.FlashlightOff,stringResource(R.string.torch))}
@@ -173,7 +187,9 @@ fun CameraScreen() {
                 Text(stringResource(R.string.storage_permission))
                 Button(onClick={askStorage.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)}){Text(stringResource(R.string.allow_storage))}
             }
-            Button(onClick={
+            Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.SpaceEvenly) {
+            IconButton(onClick={lastPhoto?.let{safeOpen(context,Intent(Intent.ACTION_VIEW).setDataAndType(Uri.parse(it),"image/jpeg").addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION))}},enabled=lastPhoto!=null){Icon(Icons.Default.PhotoLibrary,stringResource(R.string.open_last_photo))}
+            Surface(onClick={
                 saving=true;status=null;error=""
                 if(frameMode) {
                     val frame=latest.get()
@@ -194,13 +210,17 @@ fun CameraScreen() {
                         })
                     }catch(e:Exception){saving=false;status=R.string.save_failed;error=e.message.orEmpty()}
                 }
-            },enabled=storage && capture!=null && !saving,modifier=Modifier.fillMaxWidth().heightIn(min=56.dp)){
-                Icon(Icons.Default.CameraAlt,null);Spacer(Modifier.width(8.dp));Text(stringResource(if(saving)R.string.busy else if(frameMode)R.string.capture_frame else R.string.capture_photo))
+            },enabled=canCapture,modifier=Modifier.size(80.dp).alpha(if(canCapture || saving)1f else 0.35f).semantics {role=Role.Button;contentDescription=shutterLabel},shape=CircleShape,color=Color.White,border=BorderStroke(5.dp,MaterialTheme.colorScheme.primary)){
+                Box(contentAlignment=Alignment.Center){if(saving)CircularProgressIndicator(Modifier.size(28.dp),color=Color(0xFF16734F)) else Icon(Icons.Default.CameraAlt,null,Modifier.size(30.dp),tint=Color(0xFF16734F))}
             }
+            IconButton(onClick={front=!front},enabled=otherLens && !saving){Icon(Icons.Default.Cameraswitch,stringResource(R.string.flip_camera))}
+            }
+            Text(stringResource(if(frameMode)R.string.frame_note else R.string.photo_note),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
             Text(stringResource(R.string.supported_camera_note),style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
         }
         status?.let{Text(stringResource(it),color=if(it==R.string.saved)MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error)}
         if(error.isNotBlank())Text(error.take(500),style=MaterialTheme.typography.bodySmall)
-        lastPhoto?.let{uri->OutlinedButton(onClick={safeOpen(context,Intent(Intent.ACTION_VIEW).setDataAndType(Uri.parse(uri),"image/jpeg").addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION))}){Text(stringResource(R.string.open_last_photo))}}
+
+    }
     }
 }

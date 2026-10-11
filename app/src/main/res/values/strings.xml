@@ -109,8 +109,25 @@
     <string name="permission_retry">If permission was denied, grant it in system app settings</string>
     <string name="app_settings">Open app settings</string>
     <string name="supported_camera_note">Lenses, zoom and light controls follow the device capabilities</string>
-    <string name="release_preview">2.0 preview · installs alongside the old app</string>
+    <string name="release_preview">2.1 preview · installs alongside the old app</string>
     <string name="csc_status">Current CSC value: %1$s</string>
     <string name="missing_value">Setting absent; silence cannot be inferred</string>
     <string name="group_status">Detected volume group %1$d</string>
+    <string name="home_title">A quieter moment.</string>
+    <string name="home_subtitle">Find the right approach for your device</string>
+    <string name="camera_hero_label">NO ROOT · READY WHEN YOU ARE</string>
+    <string name="camera_hero_title">Keep the moment</string>
+    <string name="connect_action">Connect</string>
+    <string name="modes_heading">Sound controls</string>
+    <string name="experimental_short">Experimental</string>
+    <string name="unsupported_short">Unavailable</string>
+    <string name="photo_short">Photo</string>
+    <string name="frame_short">Frame</string>
+    <string name="camera_permission_title">Your camera awaits</string>
+    <string name="camera_permission_hint">Allow camera access to start framing.\nNo Shizuku or root required.</string>
+    <string name="diagnostics_title">Device &amp; diagnostics</string>
+    <string name="diagnostics_subtitle">A clear record of every change</string>
+    <string name="log_empty_title">Ready when you are</string>
+    <string name="log_count">%1$d entries</string>
+    <string name="open_preferences">Personalize</string>
 </resources>

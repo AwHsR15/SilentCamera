@@ -6,7 +6,7 @@ import subprocess
 import zipfile
 from pathlib import Path, PurePosixPath
 
-VERSION="2.0"
+VERSION="2.1"
 def source_allowed(path:str)->bool:
     parts=PurePosixPath(path).parts
     if any(part in {".git",".gradle",".worktrees",".superpowers","__pycache__","build","release"} for part in parts):return False

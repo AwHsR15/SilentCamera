@@ -21,9 +21,9 @@ jobs:
         run: bash tools/build-release.sh
       - uses: actions/upload-artifact@v4
         with:
-          name: SilentCamera-2.0-preview
+          name: SilentCamera-2.1-preview
           path: |
-            release/SilentCamera-v2.0-*
+            release/SilentCamera-v2.1-*
             release/manifest.json
             release/SHA256SUMS
           if-no-files-found: error

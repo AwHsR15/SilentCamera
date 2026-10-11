@@ -1,6 +1,6 @@
 id=silentcamera_shutter
 name=SilentCamera Shutter Audio
-version=2.0
-versionCode=20
+version=2.1
+versionCode=21
 author=AwHsR15
 description=Systemless silent OGG overlays for detected shutter audio files. OEM resources inside camera APKs are unsupported. Disable or uninstall and reboot to restore.

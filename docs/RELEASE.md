@@ -1,15 +1,15 @@
-# SilentCamera 2.0 preview delivery
+# SilentCamera 2.1 preview delivery
 
-This delivery adds six independent approaches, conservative capability detection, original-state recovery, Chinese/Japanese/English themes and UI, and an in-app CameraX camera with preview-frame saving. Research and the approved design are included in `docs/`.
+The 2.1 update redesigns the interface with stable Material 3 components, a two-column mode dashboard, bottom-sheet operations and a circular shutter. This delivery includes six independent approaches, conservative capability detection, original-state recovery, Chinese/Japanese/English themes and UI, and an in-app CameraX camera with preview-frame saving. Research and the approved design are included in `docs/`.
 
 ## Files
 
 | File in release/ | Contents |
 |---|---|
-| SilentCamera-v2.0-preview.apk | Signed installable preview, application ID com.marvis.silentcamera.preview, API 26+ |
-| SilentCamera-v2.0-magisk.zip | Optional systemless shutter OGG module |
-| SilentCamera-v2.0-bundle.zip | APK, module, Python/Windows/Unix ADB tools, three-language guides and checksums |
-| SilentCamera-v2.0-source.zip | Tracked source and build tools; excludes release files, caches and private keys |
+| SilentCamera-v2.1-preview.apk | Signed installable preview, application ID com.marvis.silentcamera.preview, API 26+ |
+| SilentCamera-v2.1-magisk.zip | Optional systemless shutter OGG module |
+| SilentCamera-v2.1-bundle.zip | APK, module, Python/Windows/Unix ADB tools, three-language guides and checksums |
+| SilentCamera-v2.1-source.zip | Tracked source and build tools; excludes release files, caches and private keys |
 | manifest.json | Exact source commit, APK/module/source byte sizes and SHA-256 hashes |
 | SHA256SUMS | APK, module, bundle, source and manifest integrity |
 
@@ -29,6 +29,6 @@ Verify downloaded files in the `release/` directory with `sha256sum -c SHA256SUM
 
 Android 15 / API 35 Google APIs x86_64 emulator checks confirmed preview APK installation, MainActivity startup, the no-Shizuku device/mode screen, and the camera-permission-required screen. Direct ADB checks confirmed the camera package PLAY_AUDIO transitions to ignore and restores to default; Android 15 output differences led to regression tests. These are configuration checks, not acoustic tests.
 
-The environment has no hardware acceleration. Software emulation encountered launcher/System UI ANRs and repeated Bluetooth-service crashes; remaining permission-dialog, language/theme interaction, camera capture/save and Shizuku service runtime checks could not be completed reliably. They remain unverified rather than being reported as passing. Locale resources have matching 113-key sets; CameraX/YUV, policy and transaction behavior is covered by unit tests and compile/lint checks.
+The environment has no hardware acceleration. Software emulation encountered launcher/System UI ANRs and repeated Bluetooth-service crashes; remaining permission-dialog, language/theme interaction, camera capture/save and Shizuku service runtime checks could not be completed reliably. They remain unverified rather than being reported as passing. The 2.0 runtime observations above predate the 2.1 interface redesign; 2.1 device interaction and visual rendering remain unverified. Locale resources have matching 130-key sets; CameraX/YUV, policy and transaction behavior is covered by unit tests and compile/lint checks.
 
 The local preview certificate SHA-256 is `2e4d513d5f1336154929431ce2372b4fa300209349e88c86550a7b985aa10916` (RSA 2048, APK Signature Scheme v2 verified). Japanese OEM phones, root/resetprop modification and Magisk installation remain unverified in this environment. See [COMPATIBILITY.md](COMPATIBILITY.md) for the capability rules and test coverage.

@@ -109,8 +109,25 @@
     <string name="permission_retry">权限被拒绝时，可到系统应用设置中重新授权</string>
     <string name="app_settings">打开应用设置</string>
     <string name="supported_camera_note">前后摄、缩放与补光按设备实际能力显示</string>
-    <string name="release_preview">2.0 预览版 · 可与旧版并行安装</string>
+    <string name="release_preview">2.1 预览版 · 可与旧版并行安装</string>
     <string name="csc_status">CSC 当前值：%1$s</string>
     <string name="missing_value">此项不存在，不能据此判断无声</string>
     <string name="group_status">检测到音量组 %1$d</string>
+    <string name="home_title">拍照，轻一点。</string>
+    <string name="home_subtitle">为你的设备找到合适的方式</string>
+    <string name="camera_hero_label">无需 ROOT · 随时开启</string>
+    <string name="camera_hero_title">留住画面，少一点声音</string>
+    <string name="connect_action">连接</string>
+    <string name="modes_heading">静音方案</string>
+    <string name="experimental_short">实验功能</string>
+    <string name="unsupported_short">不适用</string>
+    <string name="photo_short">照片</string>
+    <string name="frame_short">预览帧</string>
+    <string name="camera_permission_title">镜头，准备好了</string>
+    <string name="camera_permission_hint">开启相机权限，即可开始取景。\n无需 Shizuku，也无需 Root。</string>
+    <string name="diagnostics_title">设备与诊断</string>
+    <string name="diagnostics_subtitle">每次操作，都有记录</string>
+    <string name="log_empty_title">一切准备就绪</string>
+    <string name="log_count">%1$d 条记录</string>
+    <string name="open_preferences">个性化设置</string>
 </resources>

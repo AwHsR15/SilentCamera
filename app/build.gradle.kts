@@ -12,8 +12,8 @@ android {
         applicationId = "com.marvis.silentcamera"
         minSdk = 26
         targetSdk = 35
-        versionCode = 20
-        versionName = "2.0"
+        versionCode = 21
+        versionName = "2.1"
         val sourceCommit = System.getenv("SILENTCAMERA_SOURCE_COMMIT") ?: "local"
         require(sourceCommit == "local" || sourceCommit.matches(Regex("[a-f0-9]{40}")))
         buildConfigField("String", "SOURCE_COMMIT", "\"$sourceCommit\"")
@@ -70,7 +70,7 @@ dependencies {
     implementation("dev.rikka.shizuku:provider:13.1.5")
 
     // Compose BOM
-    val composeBom = platform("androidx.compose:compose-bom:2024.06.00")
+    val composeBom = platform("androidx.compose:compose-bom:2024.12.01")
     implementation(composeBom)
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")

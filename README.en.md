@@ -1,4 +1,4 @@
-# SilentCamera 2.0
+# SilentCamera 2.1
 
 [简体中文](README.md) · [日本語](README.ja.md) · **English**
 
@@ -8,10 +8,10 @@ Six independent camera sound modes for Japanese Android devices, capability dete
 
 ## Downloads
 
-- [Signed preview APK](release/SilentCamera-v2.0-preview.apk)
-- [Complete bundle: APK, Magisk, PC tools and guides](release/SilentCamera-v2.0-bundle.zip)
-- [Magisk module](release/SilentCamera-v2.0-magisk.zip)
-- [Source archive](release/SilentCamera-v2.0-source.zip)
+- [Signed preview APK](release/SilentCamera-v2.1-preview.apk)
+- [Complete bundle: APK, Magisk, PC tools and guides](release/SilentCamera-v2.1-bundle.zip)
+- [Magisk module](release/SilentCamera-v2.1-magisk.zip)
+- [Source archive](release/SilentCamera-v2.1-source.zip)
 - [SHA256SUMS](release/SHA256SUMS) · [Source/artifact manifest](release/manifest.json)
 
 The preview application ID is `com.marvis.silentcamera.preview`; it can coexist with v1. Preview signing cannot update the original app. Production signing uses externally supplied credentials. The [v1 APK](release/SilentCamera-v1.0-debug.apk) is retained.
@@ -50,7 +50,7 @@ python3 tools/adb_control.py apply-csc --backup phone-original.json
 python3 tools/adb_control.py restore-csc --backup phone-original.json
 ```
 
-Use `tools/adb-control.sh` on Linux/macOS or `tools\adb-control.bat` on Windows. Select a device with `--serial`, or user with `--user`. Repository installs require `--apk release/SilentCamera-v2.0-preview.apk`.
+Use `tools/adb-control.sh` on Linux/macOS or `tools\adb-control.bat` on Windows. Select a device with `--serial`, or user with `--user`. Repository installs require `--apk release/SilentCamera-v2.1-preview.apk`.
 
 Build with JDK 17, SDK 35 and Python 3.10+:
 

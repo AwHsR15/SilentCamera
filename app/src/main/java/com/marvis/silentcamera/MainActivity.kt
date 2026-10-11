@@ -8,6 +8,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.ui.semantics.Role
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -73,25 +75,28 @@ private fun AppScreen(model:MainViewModel,onPermission:()->Unit,onTheme:(String)
     var tab by rememberSaveable{mutableIntStateOf(0)}
     var settings by remember{mutableStateOf(false)}
     val scheme=MaterialTheme.colorScheme
-    Scaffold(
+    val cameraTab=tab==1
+    Scaffold(containerColor=if(cameraTab)androidx.compose.ui.graphics.Color(0xFF101412) else scheme.background,
         topBar={
-            Row(Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal=20.dp,vertical=12.dp),verticalAlignment=Alignment.CenterVertically) {
-                Box(Modifier.size(46.dp).background(scheme.primaryContainer,RoundedCornerShape(16.dp)),contentAlignment=Alignment.Center){
-                    Icon(Icons.Default.CameraAlt,null,tint=scheme.primary)
-                }
-                Column(Modifier.weight(1f).padding(start=12.dp)) {
-                    Text("SilentCamera",style=MaterialTheme.typography.titleLarge,fontWeight=FontWeight.Bold)
-                    Text(stringResource(R.string.tagline),style=MaterialTheme.typography.bodySmall,color=scheme.onSurfaceVariant)
-                }
-                IconButton(onClick={settings=true}){Icon(Icons.Default.Tune,stringResource(R.string.settings))}
+            Row(Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal=24.dp,vertical=12.dp),verticalAlignment=Alignment.CenterVertically) {
+                Icon(Icons.Default.CameraAlt,null,Modifier.size(24.dp),tint=if(cameraTab)androidx.compose.ui.graphics.Color(0xFF80D8AE) else scheme.primary)
+                Text("SilentCamera",Modifier.weight(1f).padding(start=10.dp),style=MaterialTheme.typography.titleLarge,
+                    color=if(cameraTab)androidx.compose.ui.graphics.Color.White else scheme.onSurface)
+                IconButton(onClick={settings=true}){Icon(Icons.Default.Tune,stringResource(R.string.settings),
+                    tint=if(cameraTab)androidx.compose.ui.graphics.Color.White else scheme.onSurfaceVariant)}
             }
         },
         bottomBar={
-            NavigationBar {
-                listOf(R.string.tab_modes to Icons.Default.Widgets,R.string.tab_camera to Icons.Default.CameraAlt,R.string.tab_diagnostics to Icons.AutoMirrored.Filled.Assignment)
-                    .forEachIndexed{i,(label,icon)->
-                        NavigationBarItem(selected=tab==i,onClick={tab=i},icon={Icon(icon,null)},label={Text(stringResource(label))})
-                    }
+            Column(Modifier.background(scheme.surface)) {
+                HorizontalDivider(color=scheme.outlineVariant)
+                NavigationBar(containerColor=scheme.surface,tonalElevation=0.dp) {
+                    listOf(R.string.tab_modes to Icons.Default.Widgets,R.string.tab_camera to Icons.Default.CameraAlt,R.string.tab_diagnostics to Icons.AutoMirrored.Filled.Assignment)
+                        .forEachIndexed{i,(label,icon)->
+                            NavigationBarItem(selected=tab==i,onClick={tab=i},icon={Icon(icon,null,Modifier.size(22.dp))},label={Text(stringResource(label))},
+                                colors=NavigationBarItemDefaults.colors(indicatorColor=scheme.primaryContainer,selectedIconColor=scheme.primary,selectedTextColor=scheme.primary,
+                                    unselectedIconColor=scheme.onSurfaceVariant,unselectedTextColor=scheme.onSurfaceVariant))
+                        }
+                }
             }
         },
     ) {padding ->
@@ -102,26 +107,31 @@ private fun AppScreen(model:MainViewModel,onPermission:()->Unit,onTheme:(String)
     if(settings)PreferencesDialog(onClose={settings=false},onTheme,onLanguage)
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PreferencesDialog(onClose:()->Unit,onTheme:(String)->Unit,onLanguage:(String)->Unit) {
     val context=LocalContext.current
     var theme by remember{mutableStateOf(AppPreferences.theme(context))}
     val language=AppPreferences.language(context)
-    AlertDialog(onDismissRequest=onClose,title={Text(stringResource(R.string.settings))},
-        text={Column(Modifier.verticalScroll(rememberScrollState())){
-            Text(stringResource(R.string.language),style=MaterialTheme.typography.titleSmall)
+    ModalBottomSheet(onDismissRequest=onClose,sheetState=rememberModalBottomSheetState(skipPartiallyExpanded=true),containerColor=MaterialTheme.colorScheme.surface,tonalElevation=0.dp) {
+        Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(start=24.dp,end=24.dp,bottom=32.dp),verticalArrangement=Arrangement.spacedBy(8.dp)) {
+            Text(stringResource(R.string.settings),style=MaterialTheme.typography.headlineSmall)
+            Text(stringResource(R.string.language),Modifier.padding(top=16.dp),style=MaterialTheme.typography.titleSmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
             listOf("system" to stringResource(R.string.system),"zh-CN" to "简体中文","ja" to "日本語","en" to "English").forEach{(value,label)->
                 PreferenceOption(label,language==value){onLanguage(value)}
             }
-            Spacer(Modifier.height(12.dp));Text(stringResource(R.string.appearance),style=MaterialTheme.typography.titleSmall)
+            HorizontalDivider(Modifier.padding(vertical=8.dp),color=MaterialTheme.colorScheme.outlineVariant)
+            Text(stringResource(R.string.appearance),style=MaterialTheme.typography.titleSmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
             listOf("system" to R.string.system,"light" to R.string.light,"dark" to R.string.dark).forEach{(value,label)->
                 PreferenceOption(stringResource(label),theme==value){theme=value;onTheme(value)}
             }
-        }},confirmButton={TextButton(onClick=onClose){Text(stringResource(R.string.close))}})
+        }
+    }
 }
 @Composable
 private fun PreferenceOption(label:String,selected:Boolean,onClick:()->Unit) {
-    Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically){
-        RadioButton(selected,onClick);TextButton(onClick=onClick){Text(label)}
+    Row(Modifier.fillMaxWidth().selectable(selected=selected,role=Role.RadioButton,onClick=onClick).heightIn(min=48.dp),verticalAlignment=Alignment.CenterVertically) {
+        Text(label,Modifier.weight(1f),style=MaterialTheme.typography.bodyLarge)
+        RadioButton(selected,onClick=null)
     }
 }

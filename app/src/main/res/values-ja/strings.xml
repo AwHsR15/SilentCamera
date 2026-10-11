@@ -113,4 +113,21 @@
     <string name="csc_status">CSC 現在値：%1$s</string>
     <string name="missing_value">値がありません。無音とは判断できません</string>
     <string name="group_status">音量グループ %1$d を検出</string>
+    <string name="home_title">静かに、撮ろう。</string>
+    <string name="home_subtitle">端末に合った方法を選ぼう</string>
+    <string name="camera_hero_label">ROOT 不要 · すぐ使える</string>
+    <string name="camera_hero_title">その瞬間を残す</string>
+    <string name="connect_action">接続</string>
+    <string name="modes_heading">消音モード</string>
+    <string name="experimental_short">実験機能</string>
+    <string name="unsupported_short">非対応</string>
+    <string name="photo_short">写真</string>
+    <string name="frame_short">フレーム</string>
+    <string name="camera_permission_title">撮影をはじめよう</string>
+    <string name="camera_permission_hint">カメラを許可してプレビューを開始。\nShizuku・Root は不要です。</string>
+    <string name="diagnostics_title">端末と診断</string>
+    <string name="diagnostics_subtitle">操作の記録を、ひと目で</string>
+    <string name="log_empty_title">準備完了</string>
+    <string name="log_count">%1$d 件の記録</string>
+    <string name="open_preferences">カスタマイズ</string>
 </resources>

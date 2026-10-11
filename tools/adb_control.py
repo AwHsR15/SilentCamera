@@ -58,7 +58,7 @@ def main():
     parser.add_argument("--serial",help="ADB device serial; required when multiple devices are connected")
     parser.add_argument("--user",type=int,help="Android user; defaults to the current foreground user")
     parser.add_argument("--backup",type=Path,default=Path("silentcamera-original.json"))
-    parser.add_argument("--apk",type=Path,default=Path(__file__).resolve().parent.parent/"SilentCamera-v2.0-preview.apk")
+    parser.add_argument("--apk",type=Path,default=Path(__file__).resolve().parent.parent/"SilentCamera-v2.1-preview.apk")
     args=parser.parse_args()
     devices=subprocess.run(["adb","devices"],capture_output=True,text=True,check=True,timeout=15).stdout
     online=[line.split()[0] for line in devices.splitlines()[1:] if len(line.split())==2 and line.split()[1]=="device"]

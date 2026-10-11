@@ -2,7 +2,7 @@
 
 ## Installation / 安装 / インストール
 
-Install `SilentCamera-v2.0-magisk.zip` from Magisk 20.4+ → Modules → Install from storage on a booted rooted device, then reboot. Test a real photo. This module is optional; the APK and in-app camera work without it.
+Install `SilentCamera-v2.1-magisk.zip` from Magisk 20.4+ → Modules → Install from storage on a booted rooted device, then reboot. Test a real photo. This module is optional; the APK and in-app camera work without it.
 
 在已启动且获得 Root 的设备上，Magisk 20.4+ → 模块 → 从本地安装，选择 ZIP，重启后实拍验证。模块是可选方案，APK 和应用内拍照无需它。
 
