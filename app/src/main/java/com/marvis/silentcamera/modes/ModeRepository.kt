@@ -36,6 +36,7 @@ class ModeRepository(private val context:Context) {
 
     fun requestRoot():Boolean {
         rootAvailable=root.execute(listOf("id","-u")).let{it.isSuccess && it.stdout.trim()=="0"}
+        if(rootAvailable)rootAvailable=root.execute(listOf("resetprop","--help")).let{it.isSuccess && (it.stdout+it.stderr).contains("resetprop",ignoreCase=true)}
         return rootAvailable
     }
 
@@ -50,9 +51,10 @@ class ModeRepository(private val context:Context) {
                     CameraApp(pkg,ri.loadLabel(context.packageManager).toString(),context.packageManager.getPackageInfo(pkg,0).versionName.orEmpty())
                 }.getOrNull()
             }.distinctBy{it.packageName}.sortedBy{it.label}
-        var csc:String?=null;var group:AudioGroup?=null
+        var csc:String?=null;var cscReadable=false;var group:AudioGroup?=null
         if(granted) {
-            if(ModePolicy.supportsCsc(Build.MANUFACTURER)) csc=runCatching{CscTarget(reportExecutor,identity.userId).read()}.getOrNull()
+            if(ModePolicy.supportsCsc(Build.MANUFACTURER)) runCatching{CscTarget(reportExecutor,identity.userId).read()}
+                .onSuccess{csc=it;cscReadable=true}.onFailure{commandLog.add("CSC setting unreadable: ${it.message}")}
             group=runCatching{readAudioGroup()}.onFailure{commandLog.add("Audio policy unavailable: ${it.message}")}.getOrNull()
         }
         val props=if(rootAvailable) CommandPolicy.properties.filter{key ->
@@ -61,6 +63,7 @@ class ModeRepository(private val context:Context) {
         val assessments=SilenceMode.entries.map{mode ->when(mode) {
             SilenceMode.CSC -> if(!ModePolicy.supportsCsc(Build.MANUFACTURER)) ModeAssessment(mode,Availability.UNSUPPORTED,Requirement.SAMSUNG_ONLY)
                 else if(!granted) ModeAssessment(mode,Availability.NEEDS_PERMISSION,Requirement.SHIZUKU)
+                else if(!cscReadable)ModeAssessment(mode,Availability.UNSUPPORTED,Requirement.SAMSUNG_ONLY)
                 else ModeAssessment(mode,Availability.AVAILABLE,Requirement.READY)
             SilenceMode.AUDIO_GROUP -> if(!granted) ModeAssessment(mode,Availability.NEEDS_PERMISSION,Requirement.SHIZUKU)
                 else if(group==null) ModeAssessment(mode,Availability.UNSUPPORTED,Requirement.AUDIO_POLICY)

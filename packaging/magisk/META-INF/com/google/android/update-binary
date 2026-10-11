@@ -1,0 +1,11 @@
+#!/sbin/sh
+# Original bootstrap for the installed Magisk module installer.
+umask 022
+ui_print() { echo "$1"; }
+OUTFD=$2
+ZIPFILE=$3
+[ -f /data/adb/magisk/util_functions.sh ] || { ui_print 'Magisk 20.4+ is required.'; exit 1; }
+. /data/adb/magisk/util_functions.sh
+[ "$MAGISK_VER_CODE" -ge 20400 ] || abort 'Magisk 20.4+ is required.'
+install_module
+exit 0

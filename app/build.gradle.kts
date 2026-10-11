@@ -14,6 +14,9 @@ android {
         targetSdk = 35
         versionCode = 20
         versionName = "2.0"
+        val sourceCommit = System.getenv("SILENTCAMERA_SOURCE_COMMIT") ?: "local"
+        require(sourceCommit == "local" || sourceCommit.matches(Regex("[a-f0-9]{40}")))
+        buildConfigField("String", "SOURCE_COMMIT", "\"$sourceCommit\"")
     }
 
     buildTypes {
@@ -40,6 +43,22 @@ android {
         compose = true
         aidl = true
         buildConfig = true
+    }
+
+    // All locales are shipped together, including in optional App Bundle builds.
+    bundle { language { enableSplit = false } }
+
+    val externalKeystore = System.getenv("SILENTCAMERA_KEYSTORE")
+    if (!externalKeystore.isNullOrBlank()) {
+        signingConfigs {
+            create("externalRelease") {
+                storeFile = file(externalKeystore)
+                storePassword = System.getenv("SILENTCAMERA_STORE_PASSWORD")
+                keyAlias = System.getenv("SILENTCAMERA_KEY_ALIAS")
+                keyPassword = System.getenv("SILENTCAMERA_KEY_PASSWORD")
+            }
+        }
+        buildTypes.getByName("release").signingConfig = signingConfigs.getByName("externalRelease")
     }
 
     testOptions { unitTests.isReturnDefaultValues = true }

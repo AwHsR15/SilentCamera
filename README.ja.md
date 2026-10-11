@@ -1,68 +1,67 @@
-# SilentCamera · Galaxy 日本版 シャッター音オフツール
+# SilentCamera 2.0
 
 [简体中文](README.md) · **日本語** · [English](README.en.md)
 
-> Shizuku を使って Samsung 日本／韓国版端末の「強制カメラシャッター音」をオフにする小さなツール。Root 不要、ワンタップ。
+日本向け Android のカメラ音ツール。6つの独立モード、端末能力の検出、元の状態への復元、アプリ内カメラを搭載。Android 8.0以降、中国語／日本語／英語とライト／ダークテーマに対応。ネットワーク権限・テレメトリーはありません。
 
-Samsung は日本版・韓国版の端末でカメラのシャッター音を**強制オン**にしており、カメラアプリ内では消せません。
-本ツールは [Shizuku](https://shizuku.rikka.app/) で ADB レベルの権限を取得し、公開された CSC システム設定
-`csc_pref_camera_forced_shuttersound_key = 0` を書き込むことで、シャッター音を再びシステム音量に追従させます（=消音可能に）。
+**純正カメラの消音可否は機種、ファームウェア、カメラの実装に依存します。全機種での成功は保証できません。日本向け実機では未検証です。** 設定の読み戻しと実際の撮影音の確認は別です。
 
-<p align="center">
-  <em>Jetpack Compose · Material 3 · Shizuku API 13 · Kotlin</em>
-</p>
+## ダウンロード
 
----
+- [署名済みプレビュー APK](release/SilentCamera-v2.0-preview.apk)
+- [全部入り ZIP：APK、Magisk、PC ツール、説明](release/SilentCamera-v2.0-bundle.zip)
+- [Magisk モジュール](release/SilentCamera-v2.0-magisk.zip)
+- [ソース ZIP](release/SilentCamera-v2.0-source.zip)
+- [SHA256SUMS](release/SHA256SUMS) · [ソース／成果物の記録](release/manifest.json)
 
-## ✨ 機能
+プレビュー版のパッケージ名は `com.marvis.silentcamera.preview` です。旧版と共存できます。署名が異なるため旧版へ上書きできません。正式署名の秘密鍵は外部から設定します。[v1 APK](release/SilentCamera-v1.0-debug.apk) も残しています。
 
-- **ワンタップ消音** —— `settings put system csc_pref_camera_forced_shuttersound_key 0` を自動実行
-- **3 つのステータスカード** —— Shizuku サービス / 権限 / 現在のシャッター状態を一目で確認
-- **書き込み前後の検証** —— 変更直後に読み戻して実際に反映されたか確認
-- **音声ファイル検出** —— `/system/media/audio/ui/` 内のシャッター音を検出（読み取りのみ、削除・変更なし）
-- **色分けログ** —— ステップ／成功／警告／エラーを色分け表示、自動スクロール・コピー・クリア対応
-- **Root 不要** —— Shizuku のみ（ワイヤレスデバッグまたは USB で起動）
+## 6つのモード
 
-## 📦 すぐにインストール
-
-[`release/SilentCamera-v1.0-debug.apk`](release/SilentCamera-v1.0-debug.apk) をダウンロードして端末に入れるだけ。
-
-## 🚀 使い方
-
-```
-Shizuku 起動 ──▶ アプリを開く ──▶「権限を要求」して許可 ──▶「ワンタップ消音」──▶ 完了
-```
-
-1. [Shizuku](https://shizuku.rikka.app/) をインストールして起動（開発者向けオプションでワイヤレス／USB デバッグを有効化）
-2. SilentCamera を開く
-3. 「**権限を要求**」→ Shizuku のダイアログで許可
-4. 「**ワンタップ消音**」をタップ。ログに `[✓] 快门强制音已关闭！` が出れば成功
-
-## 🔧 自分でビルド
-
-```bash
-# Android SDK（platform-35, build-tools 35）と JDK 17+ が必要
-./gradlew assembleDebug
-# 出力: app/build/outputs/apk/debug/app-debug.apk
-```
-
-## 🧠 技術メモ
-
-| 項目 | 内容 |
+| モード | 条件・用途 |
 |---|---|
-| 設定キー | `csc_pref_camera_forced_shuttersound_key`（CSC = 地域別カスタマイズ層のシステム設定） |
-| 権限 | Shizuku の ADB シェル。`Shizuku.newProcess()` をリフレクションで呼び出し（13.x API では private） |
-| シェル | `&&` やワイルドカードが必要な処理は `sh -c` 経由。引数がリテラル扱いになるのを防ぐ |
-| 永続性 | 値は `SettingsProvider` に保存され通常の再起動では消えない。**大型 OTA 後はリセットされる場合あり**、再実行が必要 |
-| 構成 | `MainActivity`（Compose UI）/ `MainViewModel`（状態・ロジック）/ `ShizukuShell`（コマンド）/ `Theme`（配色） |
-| 範囲 | この公開システム設定 1 項目のみを変更。**Root なし・システムパーティション改変なし・セキュリティ回避なし** |
+| Samsung CSC | Samsung ファームウェア + Shizuku。音をシステム設定に従わせます |
+| 強制通知音グループ | Shizuku + 対応 CLI。独立したグループを動的に特定し、正確に復元できない場合は無効化 |
+| カメラアプリの音声制御 | Shizuku。選択したカメラの PLAY_AUDIO を制御する実験機能。他の音声にも影響する可能性あり |
+| Root の音声プロパティ | Root + resetprop。検出した既知のカメラプロパティのみ変更する実験機能 |
+| Magisk 音声置換 | 既存の許可リスト内のシャッター OGG を上書きする独立モジュール。再起動が必要 |
+| アプリ内カメラ | Shizuku／Root 不要。CameraX 撮影とプレビューフレーム保存 |
 
-## ⚠️ 免責事項
+着信・メディア・通話・アラームのグループを固定番号で消音しません。機種依存の LSPosed hook は外部調査資料として紹介し、汎用実行モードにはしていません。
 
-本ツールは**自身が所有する端末**で、個人的な利用体験の改善のみを目的としています。日本・韓国などではシャッター音に関する
-社会的規範や法規制があります。お住まいの地域の法律を理解・遵守し、他者のプライバシーを尊重し、**盗撮など違法な用途には絶対に使用しないでください**。
-作者は一切の濫用について責任を負いません。
+## 使用と復元
 
-## 📄 ライセンス
+1. APK をインストールし、検出結果を確認します。最初の3つのシステム設定モードには [Shizuku](https://shizuku.rikka.app/guide/setup/) の起動と許可が必要です。通常、無線起動は Android 11以降、旧版は USB ADB を使えます。
+2. モードと必要なカメラアプリを選び、適用します。変更前に元の状態を保存し、変更後に読み戻します。再適用で最初のバックアップを上書きしません。
+3. 純正カメラで実写し、無音／音ありを記録します。「設定を適用済み」は消音成功を意味しません。
+4. 別の方法へ切り替える前、データ消去・アンインストール前に復元してください。バックアップは端末内に保存され、Android の自動バックアップには含まれません。ファームウェア・ユーザーが異なる場合は復元を拒否します。
 
-[MIT](LICENSE) © 2026 AwHsR15
+アプリ内カメラは前後切替、フォーカス、ズーム、グリッド、対応端末のフラッシュ／ライトに対応します。通常撮影でアプリはシャッター音を再生しませんが、HAL が鳴る場合があります。フレーム保存は通常の静止画要求を使わず、画質はプレビューに制限されます。Android 8–9 の保存にはストレージ権限が必要です。
+
+## PC ツールとビルド
+
+ZIP を展開し、公式 [Platform Tools](https://developer.android.com/tools/releases/platform-tools) と Python 3.10以降をインストールして USB デバッグを許可してください。
+
+```sh
+python3 tools/adb_control.py detect
+python3 tools/adb_control.py install
+# Samsung のみ。バックアップ JSON を保管してください
+python3 tools/adb_control.py apply-csc --backup phone-original.json
+python3 tools/adb_control.py restore-csc --backup phone-original.json
+```
+
+Linux／macOS は `tools/adb-control.sh`、Windows は `tools\adb-control.bat`。複数端末は `--serial`、ユーザー指定は `--user` を使います。リポジトリ内からのインストールは `--apk release/SilentCamera-v2.0-preview.apk` を追加します。
+
+JDK 17、SDK 35、Python 3.10以降でビルドします。
+
+```sh
+./gradlew testDebugUnitTest lintDebug assembleDebug
+python3 -m unittest discover -s tools -p 'test_*.py'
+bash tools/build-release.sh
+```
+
+封装にはコミット済みでクリーンな Git 作業ツリーが必要です。ソース ZIP から APK をビルドできます。コミット情報付き ZIP の再作成にはリポジトリをクローンし、`SOURCE_COMMIT.txt` のコミットをチェックアウトしてください。GitHub Actions は検証と成果物保存を行い、リポジトリ内の配布物を自動上書きしません。
+
+[互換性・検証](docs/COMPATIBILITY.md) · [Magisk](docs/MAGISK.md) · [配布・署名・ハッシュ](docs/RELEASE.md)
+
+MIT License。Shizuku、AndroidX CameraX、Jetpack Compose を使用。

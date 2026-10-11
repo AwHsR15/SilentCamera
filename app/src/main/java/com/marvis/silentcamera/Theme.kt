@@ -1,40 +1,22 @@
 package com.marvis.silentcamera
 
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-/** 应用配色（深色绿意主题）。 */
-object AppColors {
-    val Primary = Color(0xFF8BC34A)
-    val PrimaryDark = Color(0xFF558B2F)
-    val Secondary = Color(0xFF4DB6AC)
-    val Background = Color(0xFF101412)
-    val Surface = Color(0xFF1A201D)
-    val SurfaceVariant = Color(0xFF232B27)
-    val OnSurface = Color(0xFFE6EAE7)
-    val OnSurfaceMuted = Color(0xFF9AA39E)
-
-    val Success = Color(0xFF66BB6A)
-    val Warning = Color(0xFFFFB74D)
-    val Error = Color(0xFFEF5350)
-    val Info = Color(0xFF64B5F6)
-}
-
-private val DarkScheme = darkColorScheme(
-    primary = AppColors.Primary,
-    onPrimary = Color(0xFF0E1A05),
-    secondary = AppColors.Secondary,
-    background = AppColors.Background,
-    surface = AppColors.Surface,
-    surfaceVariant = AppColors.SurfaceVariant,
-    onSurface = AppColors.OnSurface,
-    onSurfaceVariant = AppColors.OnSurfaceMuted,
-    error = AppColors.Error,
+private val DarkScheme=darkColorScheme(
+    primary=Color(0xFFAFF0C4),onPrimary=Color(0xFF00391E),primaryContainer=Color(0xFF1C5134),
+    secondary=Color(0xFFADCDBB),background=Color(0xFF101813),surface=Color(0xFF131D17),
+    surfaceVariant=Color(0xFF263B2D),onSurface=Color(0xFFE3EBE3),onSurfaceVariant=Color(0xFFBCCCBD),
 )
-
+private val LightScheme=lightColorScheme(
+    primary=Color(0xFF28633F),onPrimary=Color.White,primaryContainer=Color(0xFFDAF5E0),
+    secondary=Color(0xFF526C5B),background=Color(0xFFF5F8F2),surface=Color(0xFFFAFCF7),
+    surfaceVariant=Color(0xFFE4EEE2),onSurface=Color(0xFF17231B),onSurfaceVariant=Color(0xFF4C5D50),
+)
 @Composable
-fun SilentCameraTheme(content: @Composable () -> Unit) {
-    MaterialTheme(colorScheme = DarkScheme, content = content)
+fun SilentCameraTheme(theme:String="system",content:@Composable ()->Unit) {
+    val dark=when(theme){"dark"->true;"light"->false;else->isSystemInDarkTheme()}
+    MaterialTheme(colorScheme=if(dark)DarkScheme else LightScheme,content=content)
 }

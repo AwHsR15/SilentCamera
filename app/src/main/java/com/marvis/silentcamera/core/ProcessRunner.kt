@@ -58,7 +58,7 @@ object CommandPolicy {
     private fun number(value: String) = Regex("[0-9]{1,9}").matches(value)
     fun allowed(args: List<String>): Boolean {
         if (args.isEmpty() || args.any { it.length > 256 || it.contains('\u0000') }) return false
-        if (args == listOf("id", "-u") || args == listOf("cmd", "activity", "get-current-user") ||
+        if (args == listOf("id", "-u") || args == listOf("resetprop", "--help") || args == listOf("cmd", "activity", "get-current-user") ||
             args == listOf("dumpsys", "audio") || args == listOf("cmd", "audio", "help")) return true
         if (args.size == 2 && args[0] == "getprop") return args[1] in properties
         if (args.size == 3 && args[0] == "resetprop") return args[1] in properties && args[2] in setOf("0", "1", "true", "false")
