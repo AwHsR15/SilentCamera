@@ -1,23 +1,23 @@
 {
-  "version": "2.0",
+  "version": "2.1",
   "channel": "preview",
-  "source_commit": "cc08c49a2ac9292cfeec475f2781d772e4261b2b",
+  "source_commit": "fe77a666eef7fed7f2bbab3c7b6e7afb06fe5ce4",
   "application_id": "com.marvis.silentcamera.preview",
   "min_sdk": 26,
   "target_sdk": 35,
   "device_verification": "Emulator checks are documented separately; Japanese OEM hardware unverified.",
   "artifacts": {
-    "SilentCamera-v2.0-preview.apk": {
-      "sha256": "c64eaabe207dfe14fb59a7e874c1e3033ed19c44118e2b503930a295aeebd537",
-      "bytes": 17966003
+    "SilentCamera-v2.1-preview.apk": {
+      "sha256": "23f47b6685f82f7331a510f1415a863fa0e864513f3450153c2bf5bd8c8ac117",
+      "bytes": 19037406
     },
-    "SilentCamera-v2.0-magisk.zip": {
-      "sha256": "4fa0d246981b40c8e186d89419237d1ff9b44424592a38cf63a27de19cb623fe",
+    "SilentCamera-v2.1-magisk.zip": {
+      "sha256": "154a9d0d75e705f865b10012bea4fa5d3b86dcbd9413442a5e691612684bc30c",
       "bytes": 6144
     },
-    "SilentCamera-v2.0-source.zip": {
-      "sha256": "6efb44d79a4aed73b011481cb129531e06204ff8345afd80fbf6679c0ed200eb",
-      "bytes": 134880
+    "SilentCamera-v2.1-source.zip": {
+      "sha256": "62cf9698a8d5fd3264420ee7a5a2f19faefc5c1fc3d580ca00243bb3ef173a7e",
+      "bytes": 139616
     }
   }
 }
