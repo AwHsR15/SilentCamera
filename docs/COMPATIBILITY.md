@@ -10,6 +10,7 @@ The APK supports Android 8.0/API 26 and later, without a Samsung-only installati
 | Sharp AQUOS | Capability detection; app/root/module or alternate camera | Unverified |
 | FCNT arrows | Capability detection; app/root/module or alternate camera | Unverified |
 | Kyocera | Capability detection; app/root/module or alternate camera | Unverified |
+| Motorola razr 50 Ultra, Android 16/API 36, no root | AppOps write/restore verified in supplied logs; user reports stock-camera sound unchanged; group CLI help empty | User-reported ineffective stock-camera AppOps; in-app camera reported usable |
 | Other Android 8.0+ devices | Detected supported modes or in-app camera | Unverified |
 
 CSC is available only on Samsung with an authorized, readable settings backend. An originally absent value is preserved as absence on restoration. Audio-group mode needs a unique platform mapping with only legacy enforced-audible stream 7, supported group CLI, proven independent stream aliases, zero minimum, and equal volumes across all saved routes. It changes mute state only and preserves volume indices; group-volume writes are deliberately unavailable because Android changes only the active route. It dynamically resolves the group ID; it does not assume group 7. Missing, shared, ambiguous or differing-route groups disable modification. A route change also prevents unsafe restoration.
@@ -31,3 +32,5 @@ Emulator results and exact signing/artifact provenance are recorded in [RELEASE.
 ## Device report template
 
 Include manufacturer/model, Android/API, firmware, stock camera version, mode, configuration result, actual photo sound, restoration result, reboot behavior and relevant diagnostic output. The app's diagnostics omit IMEI, SIM identifiers and device serial. Review logs before sharing.
+
+Motorola-specific findings and the limits of the supplied device report are recorded in [the Android 16 investigation](research/motorola-razr50ultra-android16.md).
